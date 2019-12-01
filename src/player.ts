@@ -101,7 +101,7 @@ export function createPlayerBullets(state: GameState, pressed: PressedKeys) {
       continue;
     }
     if (pressed[keys.shoot]) {
-      player.shootCooldown = 30;
+      player.shootCooldown = 50;
       const { x, y, lastDx, lastDy } = player;
       if (lastDx !== undefined && lastDy !== undefined) {
         state.bullets.push({
