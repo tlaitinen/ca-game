@@ -17,6 +17,12 @@ export type Bullet = {
   playerId: number;
   collided?: boolean;
 };
+export type Explosion = {
+  x: number;
+  y: number;
+  progress: number;
+  scale?: number;
+};
 export type Tile = {
   type: number;
 };
@@ -31,6 +37,7 @@ export function tileKey(x: number, y: number) {
 export type GameState = {
   players: Array<Player>;
   bullets: Array<Bullet>;
+  explosions: Array<Explosion>;
   map: GameMap;
 };
 

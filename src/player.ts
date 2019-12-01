@@ -1,5 +1,5 @@
 import { mapHeight, initialHitpoints, mapWidth } from "./constants";
-import { GameState, PressedKeys, Player, Bullet } from "./types";
+import { GameState, PressedKeys, Player } from "./types";
 import { isEmptyTile } from "./isEmptyTile";
 
 export function createPlayer(id: 0 | 1): Player {
@@ -94,8 +94,6 @@ export function movePlayers(state: GameState, pressed: PressedKeys) {
 }
 
 export function createPlayerBullets(state: GameState, pressed: PressedKeys) {
-  const bullets: Array<Bullet> = [];
-
   for (let player of state.players) {
     const keys = playerKeys[player.id];
     if (player.shootCooldown !== undefined && player.shootCooldown >= 0) {
@@ -106,7 +104,7 @@ export function createPlayerBullets(state: GameState, pressed: PressedKeys) {
       player.shootCooldown = 30;
       const { x, y, lastDx, lastDy } = player;
       if (lastDx !== undefined && lastDy !== undefined) {
-        bullets.push({
+        state.bullets.push({
           x,
           y,
           dx: lastDx * 7,
@@ -116,5 +114,4 @@ export function createPlayerBullets(state: GameState, pressed: PressedKeys) {
       }
     }
   }
-  return bullets;
 }

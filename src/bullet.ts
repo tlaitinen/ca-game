@@ -1,6 +1,5 @@
 import { GameState } from "./types";
 import { isEmptyTile } from "./isEmptyTile";
-
 export function moveBullets(state: GameState) {
   for (let bullet of state.bullets) {
     if (
@@ -9,6 +8,11 @@ export function moveBullets(state: GameState) {
       })
     ) {
       bullet.collided = true;
+      state.explosions.push({
+        x: bullet.x | 0,
+        y: bullet.y | 0,
+        progress: 0
+      });
     }
 
     bullet.x += bullet.dx;
@@ -28,6 +32,13 @@ export function hitPlayers(state: GameState) {
       ) {
         bullet.collided = true;
         player.hp--;
+
+        state.explosions.push({
+          x: bullet.x | 0,
+          y: bullet.y | 0,
+          progress: 0,
+          scale: player.hp === 0 ? 3 : 1
+        });
       }
     }
   }

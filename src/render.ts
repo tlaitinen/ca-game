@@ -27,6 +27,8 @@ function getAngle(dx: number, dy: number) {
 }
 export function renderScene(ctx: CanvasRenderingContext2D, state: GameState) {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+  ctx.globalAlpha = 1.0;
   for (let y = 0; y < mapHeight; y++) {
     for (let x = 0; x < mapWidth; x++) {
       const tile = state.map.tiles[tileKey(x, y)];
@@ -43,7 +45,7 @@ export function renderScene(ctx: CanvasRenderingContext2D, state: GameState) {
     for (let hp = 0; hp < player.hp; hp++) {
       ctx.drawImage(
         images.hearts[player.id],
-        mapWidth * tileSize * player.id +
+        (mapWidth - 0.5) * tileSize * player.id +
           hp * (tileSize / 2) * (1 - 2 * player.id),
         0,
         tileSize / 2,
@@ -70,6 +72,21 @@ export function renderScene(ctx: CanvasRenderingContext2D, state: GameState) {
       bullet.y * tileSize,
       1.0,
       getAngle(bullet.dx ?? 0, bullet.dy ?? 0)
+    );
+  }
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  for (let explosion of state.explosions) {
+    const { x, y } = explosion;
+    const progress = explosion.progress / 50.0;
+    const scale = Math.sqrt(progress);
+    ctx.globalAlpha = 1 - progress;
+    const size = tileSize * scale * (explosion.scale ?? 1);
+    ctx.drawImage(
+      images.explosion,
+      (x + 0.5) * tileSize - size / 2,
+      (y + 0.5) * tileSize - size / 2,
+      size,
+      size
     );
   }
 }
