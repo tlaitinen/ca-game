@@ -38,7 +38,12 @@ const App: React.FC = () => {
   }, [canvas, state]);
   return (
     <div className="App">
-      <canvas ref={canvas} width={1024} height={768} />
+      <canvas
+        ref={canvas}
+        width={2048}
+        height={1536}
+        style={{ width: 1024, height: 768 }}
+      />
     </div>
   );
 };
