@@ -31,14 +31,23 @@ export function renderScene(ctx: CanvasRenderingContext2D, state: GameState) {
   ctx.globalAlpha = 1.0;
   for (let y = 0; y < mapHeight; y++) {
     for (let x = 0; x < mapWidth; x++) {
-      const tile = state.map.tiles[tileKey(x, y)];
       ctx.drawImage(
-        images.tiles[tile.type],
+        images.tiles[0],
         x * tileSize,
         y * tileSize,
         tileSize,
         tileSize
       );
+      const tile = state.map.tiles[tileKey(x, y)];
+      if (tile.type > 0) {
+        ctx.drawImage(
+          images.tiles[tile.type],
+          x * tileSize,
+          y * tileSize,
+          tileSize,
+          tileSize
+        );
+      }
     }
   }
   for (let player of state.players) {
@@ -75,11 +84,25 @@ export function renderScene(ctx: CanvasRenderingContext2D, state: GameState) {
     );
   }
   ctx.setTransform(1, 0, 0, 1, 0, 0);
+  for (let player of state.players) {
+    if (player.shootCooldown) {
+      ctx.beginPath();
+      ctx.moveTo(player.x * tileSize, player.y * tileSize - 5);
+      ctx.lineTo(
+        player.x * tileSize + player.shootCooldown,
+        player.y * tileSize - 5
+      );
+      ctx.strokeStyle = player.id === 0 ? "#ff8888" : "#8888ff";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  }
   for (let explosion of state.explosions) {
     const { x, y } = explosion;
     const progress = explosion.progress / 50.0;
+
     const scale = Math.sqrt(progress);
-    ctx.globalAlpha = 1 - progress;
+    ctx.globalAlpha = progress < 0.5 ? 1 : 1 - 2 * (progress - 0.5);
     const size = tileSize * scale * (explosion.scale ?? 1);
     ctx.drawImage(
       images.explosion,
