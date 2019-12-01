@@ -85,13 +85,11 @@ export function renderScene(ctx: CanvasRenderingContext2D, state: GameState) {
   }
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   for (let player of state.players) {
-    if (player.shootCooldown) {
+    const shootCooldown = player.shootCooldown ?? 0;
+    if (shootCooldown > 0) {
       ctx.beginPath();
       ctx.moveTo(player.x * tileSize, player.y * tileSize - 5);
-      ctx.lineTo(
-        player.x * tileSize + player.shootCooldown,
-        player.y * tileSize - 5
-      );
+      ctx.lineTo(player.x * tileSize + shootCooldown, player.y * tileSize - 5);
       ctx.strokeStyle = player.id === 0 ? "#ff8888" : "#8888ff";
       ctx.lineWidth = 2;
       ctx.stroke();
