@@ -2,8 +2,8 @@
   "name": "ca-game",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://domain/ca-game",
   "proxy": "http://localhost:5000/",
+  "main": "ts-build/server.js",
   "dependencies": {
     "@types/express": "^4.17.2",
     "@types/jest": "24.0.23",
@@ -21,8 +21,9 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "server": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/server.ts",
+    "dev-server": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/server.ts",
     "build": "react-app-rewired build",
+    "build-server": "tsc --module commonjs --noEmit false", 
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject"
   },

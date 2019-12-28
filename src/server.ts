@@ -1,13 +1,16 @@
 import express from 'express';
+import path from 'path';
+import http from 'http';
 
 const app = express();
-const http = require('http').createServer(app);
+const server = http.createServer(app);
 
-app.get('/', (_req, res) => {
-  res.send('<h1>Hello world</h1>');
+app.use(express.static(path.join(__dirname, '..', 'build')));
+app.get('/*', function(req, res) {
+  res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
 });
 
 const port = parseInt(process.env.PORT || '5000');
-http.listen(port, () => {
+server.listen(port, () => {
   console.log('listening on *:' + port);
 });
