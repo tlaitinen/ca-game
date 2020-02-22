@@ -25,7 +25,7 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "dev-server": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/server.ts",
+    "dev-server": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/server/index.ts",
     "build": "react-app-rewired build",
     "build-server": "tsc --module commonjs --noEmit false",
     "test": "react-app-rewired test --env=jsdom",

@@ -1,3 +1,5 @@
+import { mapWidth } from './constants';
+
 export type PlayerInputKey = 'up' | 'down' | 'left' | 'right' | 'shoot';
 export type PlayerInputState = Partial<Record<PlayerInputKey, boolean>>;
 export type PlayerInputHandler = (state: PlayerInputState) => void;
@@ -32,13 +34,9 @@ export type Tile = {
   type: number;
 };
 export type GameMap = {
-  tiles: {
-    [tileKey: string]: Tile;
-  };
+  tiles: Array<Tile>;
 };
-export function tileKey(x: number, y: number) {
-  return (x | 0).toString() + ',' + (y | 0).toString();
-}
+
 export type GameState = {
   players: Array<Player>;
   bullets: Array<Bullet>;
@@ -46,4 +44,15 @@ export type GameState = {
   map: GameMap;
 };
 
+export type ConnectionId = string;
+export type GameId = string;
+export type Connection = {
+  id: ConnectionId;
+  games: GameId;
+};
+export type ServerState = {
+  connections: Record<ConnectionId, Connection>;
+  games: Record<GameId, GameState>;
+};
+export type ServerMessage = { type: 'state'; payload: Partial<GameState> };
 export type ClientMessage = { type: 'input'; payload: PlayerInputState };

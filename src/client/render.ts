@@ -1,6 +1,7 @@
-import { GameState, tileKey } from "./types";
-import { images } from "./images";
-import { mapHeight, mapWidth, tileSize } from "./constants";
+import { GameState } from '../state/types';
+import { images } from '../images';
+import { mapHeight, mapWidth, tileSize } from '../state/constants';
+import { getTile } from 'state/map';
 
 function drawImage(
   ctx: CanvasRenderingContext2D,
@@ -38,7 +39,7 @@ export function renderScene(ctx: CanvasRenderingContext2D, state: GameState) {
         tileSize,
         tileSize
       );
-      const tile = state.map.tiles[tileKey(x, y)];
+      const tile = getTile(state.map, x, y);
       if (tile.type > 0) {
         ctx.drawImage(
           images.tiles[tile.type],
@@ -90,7 +91,7 @@ export function renderScene(ctx: CanvasRenderingContext2D, state: GameState) {
       ctx.beginPath();
       ctx.moveTo(player.x * tileSize, player.y * tileSize - 5);
       ctx.lineTo(player.x * tileSize + shootCooldown, player.y * tileSize - 5);
-      ctx.strokeStyle = player.id === 0 ? "#ff8888" : "#8888ff";
+      ctx.strokeStyle = player.id === 0 ? '#ff8888' : '#8888ff';
       ctx.lineWidth = 2;
       ctx.stroke();
     }

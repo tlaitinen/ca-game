@@ -1,4 +1,5 @@
-import { GameState, tileKey } from "./types";
+import { GameState } from './types';
+import { getTile } from './map';
 
 export function isEmptyTile(
   state: GameState,
@@ -6,7 +7,7 @@ export function isEmptyTile(
   y: number,
   options?: { ignorePlayerId: number }
 ): boolean {
-  const tile = state.map.tiles[tileKey(x, y)];
+  const tile = getTile(state.map, x, y);
   if (!tile || tile.type !== 0) {
     return false;
   }

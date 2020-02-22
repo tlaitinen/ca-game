@@ -1,5 +1,5 @@
 import useKeyboardHandler from './useKeyboardHandler';
-import { PlayerInputHandler } from 'types';
+import { PlayerInputHandler } from 'state/types';
 
 const useInputHandler = (handler: PlayerInputHandler) => {
   useKeyboardHandler(handler);

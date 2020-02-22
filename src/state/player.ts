@@ -22,22 +22,6 @@ export const createPlayer = (id: 0 | 1): Player => {
     };
   }
 };
-const playerKeys = [
-  {
-    left: 65,
-    up: 87,
-    right: 68,
-    down: 83,
-    shoot: 16
-  },
-  {
-    left: 37,
-    up: 38,
-    right: 39,
-    down: 40,
-    shoot: 18
-  }
-];
 
 export const movePlayers = (state: GameState) => {
   for (let player of state.players) {

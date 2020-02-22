@@ -1,5 +1,5 @@
 import { useRef, useEffect, useCallback } from 'react';
-import { PlayerInputHandler } from 'types';
+import { PlayerInputHandler } from 'state/types';
 
 export type KeyboardInput = {};
 

@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useCallback } from 'react';
 
-import { GameState, PlayerInputState, ClientMessage } from './types';
-import { createState, updateState } from './state';
+import { GameState, PlayerInputState, ClientMessage } from '../state/types';
+import { initialGameState, updateGameState } from '../state/state';
 import { renderScene } from './render';
 import ioClient from 'socket.io-client';
 import useInputHandler from 'client/InputHandler/useInputHandler';
@@ -13,7 +13,7 @@ const send = (message: ClientMessage) =>
 
 const App: React.FC = () => {
   const canvas = useRef<HTMLCanvasElement>(null);
-  const state = useRef<GameState>(createState());
+  const state = useRef<GameState>(initialGameState());
   const inputHandler = useCallback((inputState: PlayerInputState) => {
     send({ type: 'input', payload: inputState });
   }, []);
@@ -31,7 +31,7 @@ const App: React.FC = () => {
   }, [canvas, state]);
   useEffect(() => {
     const timerId = setInterval(() => {
-      updateState(state.current, []);
+      updateGameState(state.current);
     }, 16);
     return () => clearInterval(timerId);
   }, [canvas, state]);
