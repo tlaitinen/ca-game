@@ -1,5 +1,9 @@
-import { GameState } from './types';
+import { GameState, Bullet } from './types';
 import { isEmptyTile } from './isEmptyTile';
+import { createExplosion } from './explosion';
+export const createBullet = (state: GameState, bullet: Bullet) => {
+  state.bullets.push(bullet);
+};
 export const moveBullets = (state: GameState) => {
   for (const bullet of state.bullets) {
     if (
@@ -8,7 +12,7 @@ export const moveBullets = (state: GameState) => {
       })
     ) {
       bullet.collided = true;
-      state.explosions.push({
+      createExplosion(state, {
         x: bullet.x | 0,
         y: bullet.y | 0,
         progress: 0
@@ -33,7 +37,7 @@ export const hitPlayers = (state: GameState) => {
         bullet.collided = true;
         player.hp--;
 
-        state.explosions.push({
+        createExplosion(state, {
           x: bullet.x | 0,
           y: bullet.y | 0,
           progress: 0,

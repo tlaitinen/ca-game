@@ -27,7 +27,7 @@ export class Server {
       }
       updateGameState(game);
 
-      if (!game.players) {
+      if (game.players.length === 0) {
         console.log('deleting game', gameId);
         delete state.games[gameId];
       }

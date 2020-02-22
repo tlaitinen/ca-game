@@ -29,7 +29,7 @@ const App: React.FC = () => {
       }
       ctx.imageSmoothingEnabled = false;
 
-      renderScene(ctx, state.current);
+      renderScene(ctx, state.current, socket.id);
     }
     window.requestAnimationFrame(renderCallback);
   }, [canvas, state]);
@@ -59,9 +59,9 @@ const App: React.FC = () => {
     <div className="App">
       <canvas
         ref={canvas}
-        width={1024}
-        height={1024}
-        style={{ width: 512, height: 512 }}
+        width={2048}
+        height={1536}
+        style={{ width: 1024, height: 768 }}
       />
     </div>
   );

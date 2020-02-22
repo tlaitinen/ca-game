@@ -1,4 +1,4 @@
-export const mapWidth = 10;
-export const mapHeight = 10;
+export const mapWidth = 32;
+export const mapHeight = 24;
 export const initialHitpoints = 10;
 export const tileSize = 64;

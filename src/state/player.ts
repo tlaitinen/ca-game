@@ -2,6 +2,7 @@ import { mapHeight, initialHitpoints, mapWidth } from './constants';
 import { GameState, Player, GameMap, playerTypes } from './types';
 import { isEmptyTile } from './isEmptyTile';
 import { getTile } from './map';
+import { createBullet } from './bullet';
 let nextPlayerType = 0;
 
 export const createPlayer = (map: GameMap, id: string): Player => {
@@ -96,7 +97,7 @@ export const createPlayerBullets = (state: GameState) => {
       player.shootCooldown = 50;
       const { x, y, lastDx, lastDy } = player;
       if (lastDx !== undefined && lastDy !== undefined) {
-        state.bullets.push({
+        createBullet(state, {
           x,
           y,
           dx: lastDx * 7,

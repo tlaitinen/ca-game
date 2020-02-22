@@ -1,4 +1,4 @@
-import { GameState } from '../state/types';
+import { GameState, ConnectionId } from '../state/types';
 import { images } from '../images';
 import { mapHeight, mapWidth, tileSize } from '../state/constants';
 import { getTile } from 'state/map';
@@ -26,7 +26,11 @@ function getAngle(dx: number, dy: number) {
     return 0;
   }
 }
-export function renderScene(ctx: CanvasRenderingContext2D, state: GameState) {
+export function renderScene(
+  ctx: CanvasRenderingContext2D,
+  state: GameState,
+  connId: ConnectionId
+) {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
 
   ctx.globalAlpha = 1.0;
@@ -51,8 +55,9 @@ export function renderScene(ctx: CanvasRenderingContext2D, state: GameState) {
       }
     }
   }
-  for (const player of state.players) {
-    for (let hp = 0; hp < player.hp; hp++) {
+  const myPlayer = state.players.find(p => p.id === connId);
+  if (myPlayer) {
+    for (let hp = 0; hp < myPlayer.hp; hp++) {
       ctx.drawImage(
         images.hearts[0],
         hp * (tileSize / 2),
