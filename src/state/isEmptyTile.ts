@@ -5,7 +5,7 @@ export function isEmptyTile(
   state: GameState,
   x: number,
   y: number,
-  options?: { ignorePlayerId: number }
+  options?: { ignorePlayerId: string }
 ): boolean {
   const tile = getTile(state.map, x, y);
   if (!tile || tile.type !== 0) {

@@ -17,7 +17,7 @@ const registerKeyboardHandler = (
   };
   const keyupHandler = (event: KeyboardEvent) => {
     if (pressed.current) {
-      pressed.current[event.keyCode] = false;
+      delete pressed.current[event.keyCode];
       onChange();
     }
   };
@@ -30,11 +30,11 @@ const registerKeyboardHandler = (
 };
 
 const keys = {
-  left: 65,
-  up: 87,
-  right: 68,
-  down: 83,
-  shoot: 16
+  left: 37,
+  up: 38,
+  right: 39,
+  down: 40,
+  shoot: 32
 };
 
 const useKeyboardHandler = (handler: PlayerInputHandler) => {

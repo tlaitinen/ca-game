@@ -1,11 +1,14 @@
-import { mapWidth } from './constants';
-
 export type PlayerInputKey = 'up' | 'down' | 'left' | 'right' | 'shoot';
 export type PlayerInputState = Partial<Record<PlayerInputKey, boolean>>;
 export type PlayerInputHandler = (state: PlayerInputState) => void;
 
+export type ConnectionId = string;
+
+export const playerTypes = 2;
+
 export type Player = {
-  id: number;
+  id: ConnectionId;
+  type: number;
   x: number;
   y: number;
   hp: number;
@@ -21,7 +24,7 @@ export type Bullet = {
   y: number;
   dx: number;
   dy: number;
-  playerId: number;
+  playerId: ConnectionId;
   collided?: boolean;
 };
 export type Explosion = {
@@ -43,16 +46,17 @@ export type GameState = {
   explosions: Array<Explosion>;
   map: GameMap;
 };
+export type ServerMessage = { type: 'state'; payload: Partial<GameState> };
+export type ClientMessage = { type: 'input'; payload: PlayerInputState };
 
-export type ConnectionId = string;
 export type GameId = string;
 export type Connection = {
   id: ConnectionId;
-  games: GameId;
+  gameId?: GameId;
+  send: (message: ServerMessage) => void;
 };
 export type ServerState = {
-  connections: Record<ConnectionId, Connection>;
-  games: Record<GameId, GameState>;
+  connections: Record<ConnectionId, Connection | undefined>;
+  games: Record<GameId, GameState | undefined>;
+  subscribers: Record<GameId, Set<ConnectionId> | undefined>;
 };
-export type ServerMessage = { type: 'state'; payload: Partial<GameState> };
-export type ClientMessage = { type: 'input'; payload: PlayerInputState };

@@ -1,13 +1,12 @@
 import { GameState } from './types';
-import { createPlayer, movePlayers, createPlayerBullets } from './player';
+import { movePlayers, createPlayerBullets } from './player';
 import { createMap } from './map';
 import { moveBullets, hitPlayers } from './bullet';
 import { updateExplosions } from './explosion';
 export function initialGameState(): GameState {
-  const players = [createPlayer(0), createPlayer(1)];
   const map = createMap();
   return {
-    players,
+    players: [],
     bullets: [],
     explosions: [],
     map

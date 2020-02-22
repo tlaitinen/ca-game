@@ -51,12 +51,11 @@ export function renderScene(ctx: CanvasRenderingContext2D, state: GameState) {
       }
     }
   }
-  for (let player of state.players) {
+  for (const player of state.players) {
     for (let hp = 0; hp < player.hp; hp++) {
       ctx.drawImage(
-        images.hearts[player.id],
-        (mapWidth - 0.5) * tileSize * player.id +
-          hp * (tileSize / 2) * (1 - 2 * player.id),
+        images.hearts[0],
+        hp * (tileSize / 2),
         0,
         tileSize / 2,
         tileSize / 2
@@ -64,17 +63,17 @@ export function renderScene(ctx: CanvasRenderingContext2D, state: GameState) {
     }
   }
 
-  for (let player of state.players) {
+  for (const player of state.players) {
     drawImage(
       ctx,
-      images.players[player.id],
+      images.players[player.type],
       player.x * tileSize,
       player.y * tileSize,
       1.0,
       getAngle(player.lastDx ?? 0, player.lastDy ?? 0)
     );
   }
-  for (let bullet of state.bullets) {
+  for (const bullet of state.bullets) {
     drawImage(
       ctx,
       images.fireball,
@@ -85,13 +84,13 @@ export function renderScene(ctx: CanvasRenderingContext2D, state: GameState) {
     );
   }
   ctx.setTransform(1, 0, 0, 1, 0, 0);
-  for (let player of state.players) {
+  for (const player of state.players) {
     const shootCooldown = player.shootCooldown ?? 0;
     if (shootCooldown > 0) {
       ctx.beginPath();
       ctx.moveTo(player.x * tileSize, player.y * tileSize - 5);
       ctx.lineTo(player.x * tileSize + shootCooldown, player.y * tileSize - 5);
-      ctx.strokeStyle = player.id === 0 ? '#ff8888' : '#8888ff';
+      ctx.strokeStyle = player.type % 2 === 0 ? '#ff8888' : '#8888ff';
       ctx.lineWidth = 2;
       ctx.stroke();
     }

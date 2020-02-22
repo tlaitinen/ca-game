@@ -1,30 +1,38 @@
 import { mapHeight, initialHitpoints, mapWidth } from './constants';
-import { GameState, Player } from './types';
+import { GameState, Player, GameMap, playerTypes } from './types';
 import { isEmptyTile } from './isEmptyTile';
+import { getTile } from './map';
+let nextPlayerType = 0;
 
-export const createPlayer = (id: 0 | 1): Player => {
-  const y = mapHeight / 2;
-  if (id === 0) {
+export const createPlayer = (map: GameMap, id: string): Player => {
+  for (let attempts = 0; attempts < 100; attempts++) {
+    const x = (Math.random() * mapWidth) | 0;
+    const y = (Math.random() * mapHeight) | 0;
+    const tile = getTile(map, x, y);
+    if (tile.type) {
+      continue;
+    }
     return {
       id,
-      x: 0,
-      y,
-      hp: initialHitpoints,
-      input: {}
-    };
-  } else {
-    return {
-      id,
-      x: mapWidth - 1,
+      type: nextPlayerType++ % playerTypes,
+      x,
       y,
       hp: initialHitpoints,
       input: {}
     };
   }
+  return {
+    id,
+    type: nextPlayerType++ % playerTypes,
+    x: 0,
+    y: 0,
+    hp: initialHitpoints,
+    input: {}
+  };
 };
 
 export const movePlayers = (state: GameState) => {
-  for (let player of state.players) {
+  for (const player of state.players) {
     const { x, y } = player;
     if (player.targetX === undefined && player.targetY === undefined) {
       if (player.input.left && isEmptyTile(state, x - 1, y)) {
@@ -79,7 +87,7 @@ export const movePlayers = (state: GameState) => {
 };
 
 export const createPlayerBullets = (state: GameState) => {
-  for (let player of state.players) {
+  for (const player of state.players) {
     if (player.shootCooldown !== undefined && player.shootCooldown >= 0) {
       player.shootCooldown -= 1;
       continue;

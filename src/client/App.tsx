@@ -36,6 +36,10 @@ const App: React.FC = () => {
     return () => clearInterval(timerId);
   }, [canvas, state]);
   useEffect(() => {
+    socket.on('state', (gameState: GameState) => {
+      state.current = gameState;
+      console.log('got new state', gameState);
+    });
     window.requestAnimationFrame(renderCallback);
     // eslint-disable-next-line
   }, []);
@@ -43,9 +47,9 @@ const App: React.FC = () => {
     <div className="App">
       <canvas
         ref={canvas}
-        width={2048}
-        height={1536}
-        style={{ width: 1024, height: 768 }}
+        width={1024}
+        height={1024}
+        style={{ width: 512, height: 512 }}
       />
     </div>
   );

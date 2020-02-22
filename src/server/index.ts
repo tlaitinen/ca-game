@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import http from 'http';
 import socketIo from 'socket.io';
-import { updateServerState, initialServerState } from './state';
+import { Server } from './Server';
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
@@ -13,21 +13,23 @@ app.get('/', function(req, res) {
 });
 
 const port = parseInt(process.env.PORT || '5000');
+const state = new Server();
+
 io.on('connection', socket => {
-  console.log('a user connected', socket.id);
+  console.log('user connected', socket.id);
+  state.addConnection(socket.id, message =>
+    socket.emit(message.type, message.payload)
+  );
   socket.on('disconnect', function() {
     console.log('user disconnected', socket.id);
+    state.removeConnection(socket.id);
   });
   socket.on('input', msg => {
-    console.log(msg);
-    io.emit('fuu', msg);
+    state.handleInput(socket.id, msg);
   });
 });
 server.listen(port, () => {
   console.log('listening on *:' + port);
 });
 
-const serverState = initialServerState;
-setInterval(() => {
-  updateServerState(serverState);
-}, 16);
+setInterval(() => state.update(), 16);
