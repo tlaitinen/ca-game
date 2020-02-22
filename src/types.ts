@@ -1,3 +1,7 @@
+export type PlayerInputKey = 'up' | 'down' | 'left' | 'right' | 'shoot';
+export type PlayerInputState = Partial<Record<PlayerInputKey, boolean>>;
+export type PlayerInputHandler = (state: PlayerInputState) => void;
+
 export type Player = {
   id: number;
   x: number;
@@ -8,6 +12,7 @@ export type Player = {
   shootCooldown?: number;
   lastDx?: number;
   lastDy?: number;
+  input: PlayerInputState;
 };
 export type Bullet = {
   x: number;
@@ -32,7 +37,7 @@ export type GameMap = {
   };
 };
 export function tileKey(x: number, y: number) {
-  return (x | 0).toString() + "," + (y | 0).toString();
+  return (x | 0).toString() + ',' + (y | 0).toString();
 }
 export type GameState = {
   players: Array<Player>;
@@ -41,4 +46,4 @@ export type GameState = {
   map: GameMap;
 };
 
-export type PressedKeys = Array<boolean>;
+export type ClientMessage = { type: 'input'; payload: PlayerInputState };

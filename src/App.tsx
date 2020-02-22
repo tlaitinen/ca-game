@@ -1,32 +1,24 @@
 import React, { useRef, useEffect, useCallback } from 'react';
 
-import { GameState, PressedKeys } from './types';
+import { GameState, PlayerInputState, ClientMessage } from './types';
 import { createState, updateState } from './state';
 import { renderScene } from './render';
 import ioClient from 'socket.io-client';
-
-function registerKeyboardHandler(pressed: React.MutableRefObject<PressedKeys>) {
-  document.addEventListener('keydown', event => {
-    if (pressed.current) {
-      pressed.current[event.keyCode] = true;
-    }
-  });
-  document.addEventListener('keyup', event => {
-    if (pressed.current) {
-      pressed.current[event.keyCode] = false;
-    }
-  });
-}
+import useInputHandler from 'client/InputHandler/useInputHandler';
 
 const socket = ioClient();
 
-socket.emit('fuu', 'bar');
+const send = (message: ClientMessage) =>
+  socket.emit(message.type, message.payload);
+
 const App: React.FC = () => {
   const canvas = useRef<HTMLCanvasElement>(null);
   const state = useRef<GameState>(createState());
-  const pressedKeys = useRef<PressedKeys>([]);
+  const inputHandler = useCallback((inputState: PlayerInputState) => {
+    send({ type: 'input', payload: inputState });
+  }, []);
 
-  registerKeyboardHandler(pressedKeys);
+  useInputHandler(inputHandler);
   const renderCallback = useCallback(() => {
     if (canvas.current) {
       const ctx = canvas.current.getContext('2d');
@@ -39,7 +31,7 @@ const App: React.FC = () => {
   }, [canvas, state]);
   useEffect(() => {
     const timerId = setInterval(() => {
-      updateState(state.current, pressedKeys.current);
+      updateState(state.current, []);
     }, 16);
     return () => clearInterval(timerId);
   }, [canvas, state]);

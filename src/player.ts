@@ -1,25 +1,27 @@
-import { mapHeight, initialHitpoints, mapWidth } from "./constants";
-import { GameState, PressedKeys, Player } from "./types";
-import { isEmptyTile } from "./isEmptyTile";
+import { mapHeight, initialHitpoints, mapWidth } from './constants';
+import { GameState, Player } from './types';
+import { isEmptyTile } from './isEmptyTile';
 
-export function createPlayer(id: 0 | 1): Player {
+export const createPlayer = (id: 0 | 1): Player => {
   const y = mapHeight / 2;
   if (id === 0) {
     return {
       id,
       x: 0,
       y,
-      hp: initialHitpoints
+      hp: initialHitpoints,
+      input: {}
     };
   } else {
     return {
       id,
       x: mapWidth - 1,
       y,
-      hp: initialHitpoints
+      hp: initialHitpoints,
+      input: {}
     };
   }
-}
+};
 const playerKeys = [
   {
     left: 65,
@@ -37,18 +39,17 @@ const playerKeys = [
   }
 ];
 
-export function movePlayers(state: GameState, pressed: PressedKeys) {
+export const movePlayers = (state: GameState) => {
   for (let player of state.players) {
-    const keys = playerKeys[player.id];
     const { x, y } = player;
     if (player.targetX === undefined && player.targetY === undefined) {
-      if (pressed[keys.left] && isEmptyTile(state, x - 1, y)) {
+      if (player.input.left && isEmptyTile(state, x - 1, y)) {
         player.targetX = x - 1;
-      } else if (pressed[keys.up] && isEmptyTile(state, x, y - 1)) {
+      } else if (player.input.up && isEmptyTile(state, x, y - 1)) {
         player.targetY = y - 1;
-      } else if (pressed[keys.right] && isEmptyTile(state, x + 1, y)) {
+      } else if (player.input.right && isEmptyTile(state, x + 1, y)) {
         player.targetX = x + 1;
-      } else if (pressed[keys.down] && isEmptyTile(state, x, y + 1)) {
+      } else if (player.input.down && isEmptyTile(state, x, y + 1)) {
         player.targetY = y + 1;
       }
     } else {
@@ -91,16 +92,15 @@ export function movePlayers(state: GameState, pressed: PressedKeys) {
       }
     }
   }
-}
+};
 
-export function createPlayerBullets(state: GameState, pressed: PressedKeys) {
+export const createPlayerBullets = (state: GameState) => {
   for (let player of state.players) {
-    const keys = playerKeys[player.id];
     if (player.shootCooldown !== undefined && player.shootCooldown >= 0) {
       player.shootCooldown -= 1;
       continue;
     }
-    if (pressed[keys.shoot]) {
+    if (player.input.shoot) {
       player.shootCooldown = 50;
       const { x, y, lastDx, lastDy } = player;
       if (lastDx !== undefined && lastDy !== undefined) {
@@ -114,4 +114,4 @@ export function createPlayerBullets(state: GameState, pressed: PressedKeys) {
       }
     }
   }
-}
+};
