@@ -1,17 +1,17 @@
 import { GameState } from './types';
 import { getTile } from './map';
 
-export function isEmptyTile(
+export const isEmptyTile = (
   state: GameState,
   x: number,
   y: number,
   options?: { ignorePlayerId: string }
-): boolean {
+): boolean => {
   const tile = getTile(state.map, x, y);
   if (!tile || tile.type !== 0) {
     return false;
   }
-  for (let player of state.players) {
+  for (const player of state.players) {
     if (options?.ignorePlayerId === player.id) {
       continue;
     }
@@ -26,4 +26,4 @@ export function isEmptyTile(
     }
   }
   return true;
-}
+};

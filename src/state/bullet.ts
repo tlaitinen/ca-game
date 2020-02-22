@@ -1,7 +1,7 @@
-import { GameState } from "./types";
-import { isEmptyTile } from "./isEmptyTile";
-export function moveBullets(state: GameState) {
-  for (let bullet of state.bullets) {
+import { GameState } from './types';
+import { isEmptyTile } from './isEmptyTile';
+export const moveBullets = (state: GameState) => {
+  for (const bullet of state.bullets) {
     if (
       !isEmptyTile(state, bullet.x, bullet.y, {
         ignorePlayerId: bullet.playerId
@@ -18,11 +18,11 @@ export function moveBullets(state: GameState) {
     bullet.x += bullet.dx;
     bullet.y += bullet.dy;
   }
-}
+};
 
-export function hitPlayers(state: GameState) {
-  for (let bullet of state.bullets) {
-    for (let player of state.players) {
+export const hitPlayers = (state: GameState) => {
+  for (const bullet of state.bullets) {
+    for (const player of state.players) {
       if (bullet.playerId === player.id) {
         continue;
       }
@@ -42,4 +42,4 @@ export function hitPlayers(state: GameState) {
       }
     }
   }
-}
+};

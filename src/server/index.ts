@@ -33,3 +33,4 @@ server.listen(port, () => {
 });
 
 setInterval(() => state.update(), 16);
+setInterval(() => state.broadcastAllGames(), 1000);

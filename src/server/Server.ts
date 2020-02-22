@@ -3,10 +3,12 @@ import {
   ConnectionId,
   PlayerInputState,
   ServerMessage,
-  GameId
+  GameId,
+  GameState
 } from 'state/types';
 import { updateGameState, initialGameState } from '../state/state';
 import { createPlayer } from '../state/player';
+import equal from 'deep-equal';
 
 const defaultGameId: GameId = 'default';
 
@@ -37,13 +39,21 @@ export class Server {
     if (!subscribers || !game) {
       return;
     }
+    const payload: Partial<GameState> = {
+      players: game.players,
+      explosions: game.explosions
+    };
     for (let connId of subscribers) {
       const conn = this.state.connections[connId];
       if (!conn) {
         continue;
       }
-      console.log('sending state to', connId);
-      conn.send({ type: 'state', payload: game });
+      conn.send({ type: 'updateState', payload });
+    }
+  }
+  broadcastAllGames() {
+    for (const gameId in this.state.games) {
+      this.broadcastGameState(gameId);
     }
   }
   addSubscriber(gameId: GameId, connId: ConnectionId) {
@@ -93,6 +103,10 @@ export class Server {
     this.state.connections[id] = { id, send };
     this.joinGame(id, defaultGameId);
     this.broadcastGameState(defaultGameId);
+    const game = this.state.games[defaultGameId];
+    if (game) {
+      send({ type: 'initState', payload: game });
+    }
   }
   removeConnection(id: ConnectionId) {
     const { state } = this;
@@ -111,7 +125,7 @@ export class Server {
     }
     const game = this.state.games[conn.gameId];
     const player = game?.players.find(p => p.id === connId);
-    if (player) {
+    if (player && !equal(player.input, input)) {
       player.input = input;
       this.broadcastGameState(conn.gameId);
     }

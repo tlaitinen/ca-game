@@ -46,7 +46,9 @@ export type GameState = {
   explosions: Array<Explosion>;
   map: GameMap;
 };
-export type ServerMessage = { type: 'state'; payload: Partial<GameState> };
+export type ServerMessage =
+  | { type: 'initState'; payload: GameState }
+  | { type: 'updateState'; payload: Partial<GameState> };
 export type ClientMessage = { type: 'input'; payload: PlayerInputState };
 
 export type GameId = string;
