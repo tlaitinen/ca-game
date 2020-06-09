@@ -4,7 +4,7 @@ import { createExplosion } from './explosion';
 export const createBullet = (state: GameState, bullet: Bullet) => {
   state.bullets.push(bullet);
 };
-export const moveBullets = (state: GameState) => {
+export const moveBullets = (state: GameState, delta: number) => {
   for (const bullet of state.bullets) {
     if (
       !isEmptyTile(state, bullet.x, bullet.y, {
@@ -19,8 +19,8 @@ export const moveBullets = (state: GameState) => {
       });
     }
 
-    bullet.x += bullet.dx;
-    bullet.y += bullet.dy;
+    bullet.x += bullet.dx * delta;
+    bullet.y += bullet.dy * delta;
   }
 };
 

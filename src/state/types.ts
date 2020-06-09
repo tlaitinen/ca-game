@@ -41,6 +41,7 @@ export type GameMap = {
 };
 
 export type GameState = {
+  time: number;
   players: Array<Player>;
   bullets: Array<Bullet>;
   explosions: Array<Explosion>;

@@ -32,7 +32,7 @@ export const createPlayer = (map: GameMap, id: string): Player => {
   };
 };
 
-export const movePlayers = (state: GameState) => {
+export const movePlayers = (state: GameState, delta: number) => {
   for (const player of state.players) {
     const { x, y } = player;
     if (player.targetX === undefined && player.targetY === undefined) {
@@ -60,37 +60,44 @@ export const movePlayers = (state: GameState) => {
         player.targetY = undefined;
         player.y = Math.round(player.y);
       }
+      const deltaX =
+        player.targetX !== undefined &&
+        Math.min(0.1 * delta, Math.abs(player.targetX - player.x));
       const dx =
         player.targetX !== undefined
           ? player.targetX > player.x
-            ? +0.1
-            : -0.1
+            ? +deltaX
+            : -deltaX
           : 0;
+      const deltaY =
+        player.targetY !== undefined &&
+        Math.min(0.1 * delta, Math.abs(player.targetY - player.y));
+
       const dy =
         player.targetY !== undefined
           ? player.targetY > player.y
-            ? +0.1
-            : -0.1
+            ? +deltaY
+            : -deltaY
           : 0;
 
       player.x += dx;
       player.y += dy;
       if (dx !== 0) {
-        player.lastDx = dx;
+        player.lastDx = Math.sign(dx);
         player.lastDy = 0;
       }
       if (dy !== 0) {
         player.lastDx = 0;
-        player.lastDy = dy;
+        player.lastDy = Math.sign(dy);
       }
     }
   }
 };
 
-export const createPlayerBullets = (state: GameState) => {
+export const createPlayerBullets = (state: GameState, delta: number) => {
   for (const player of state.players) {
     if (player.shootCooldown !== undefined && player.shootCooldown >= 0) {
-      player.shootCooldown -= 1;
+      player.shootCooldown -= delta;
       continue;
     }
     if (player.input.shoot) {
@@ -100,8 +107,8 @@ export const createPlayerBullets = (state: GameState) => {
         createBullet(state, {
           x,
           y,
-          dx: lastDx * 7,
-          dy: lastDy * 7,
+          dx: lastDx / 2,
+          dy: lastDy / 2,
           playerId: player.id
         });
       }

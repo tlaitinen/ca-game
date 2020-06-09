@@ -39,7 +39,7 @@ const App: React.FC = () => {
         return;
       }
       updateGameState(state.current);
-    }, 16);
+    }, 5);
     return () => clearInterval(timerId);
   }, [canvas, state]);
   useEffect(() => {

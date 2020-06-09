@@ -32,5 +32,5 @@ server.listen(port, () => {
   console.log('listening on *:' + port);
 });
 
-setInterval(() => state.update(), 16);
+setInterval(() => state.update(), 5);
 setInterval(() => state.broadcastAllGames(), 1000);
