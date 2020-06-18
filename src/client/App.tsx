@@ -1,10 +1,11 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 
 import { GameState, PlayerInputState, ClientMessage } from '../state/types';
 import { updateGameState } from '../state/state';
 import { renderScene } from './render';
 import ioClient from 'socket.io-client';
 import useInputHandler from 'client/InputHandler/useInputHandler';
+import './App.css';
 
 const socket = ioClient();
 
@@ -12,8 +13,11 @@ const send = (message: ClientMessage) =>
   socket.emit(message.type, message.payload);
 
 const App: React.FC = () => {
+  const appRef = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const state = useRef<GameState | undefined>();
+  const [canvasSize, setCanvasSize] = useState<[number, number]>([1, 1]);
+
   const inputHandler = useCallback((inputState: PlayerInputState) => {
     send({ type: 'input', payload: inputState });
   }, []);
@@ -21,15 +25,13 @@ const App: React.FC = () => {
   useInputHandler(inputHandler);
   const renderCallback = useCallback(() => {
     if (canvas.current) {
-      const ctx = canvas.current.getContext('2d');
-      if (!ctx || !state.current) {
+      if (!state.current) {
         window.requestAnimationFrame(renderCallback);
 
         return;
       }
-      ctx.imageSmoothingEnabled = false;
 
-      renderScene(ctx, state.current, socket.id);
+      renderScene(canvas.current, state.current, socket.id);
     }
     window.requestAnimationFrame(renderCallback);
   }, [canvas, state]);
@@ -55,13 +57,22 @@ const App: React.FC = () => {
     window.requestAnimationFrame(renderCallback);
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    const { current } = appRef;
+
+    if (!current) {
+      return;
+    }
+    setCanvasSize([current.clientWidth, current.clientHeight]);
+  }, [appRef]);
   return (
-    <div className="App">
+    <div ref={appRef} className="App">
       <canvas
         ref={canvas}
-        width={2048}
-        height={1536}
-        style={{ width: 1024, height: 768 }}
+        width={2 * canvasSize[0]}
+        height={2 * canvasSize[1]}
+        style={{ width: canvasSize[0], height: canvasSize[1] }}
       />
     </div>
   );

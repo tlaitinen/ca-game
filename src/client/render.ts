@@ -27,19 +27,36 @@ function getAngle(dx: number, dy: number) {
   }
 }
 export function renderScene(
-  ctx: CanvasRenderingContext2D,
+  canvas: HTMLCanvasElement,
   state: GameState,
   connId: ConnectionId
 ) {
+  const ctx = canvas.getContext('2d');
+  if (!ctx) {
+    return;
+  }
+  const { width, height } = canvas;
+
+  ctx.imageSmoothingEnabled = false;
+
+  const myPlayer = state.players.find(p => p.id === connId);
+
+  const offsetX = width / 2 - (myPlayer?.x ?? 0) * tileSize;
+  const offsetY = height / 2 - (myPlayer?.y ?? 0) * tileSize;
+
   ctx.setTransform(1, 0, 0, 1, 0, 0);
 
   ctx.globalAlpha = 1.0;
+  ctx.clearRect(0, 0, width, height);
+  ctx.rect(0, 0, width, height);
+  ctx.fillStyle = 'black';
+  ctx.fill();
   for (let y = 0; y < mapHeight; y++) {
     for (let x = 0; x < mapWidth; x++) {
       ctx.drawImage(
         images.tiles[0],
-        x * tileSize,
-        y * tileSize,
+        offsetX + x * tileSize,
+        offsetY + y * tileSize,
         tileSize,
         tileSize
       );
@@ -47,15 +64,14 @@ export function renderScene(
       if (tile.type > 0) {
         ctx.drawImage(
           images.tiles[tile.type],
-          x * tileSize,
-          y * tileSize,
+          offsetX + x * tileSize,
+          offsetY + y * tileSize,
           tileSize,
           tileSize
         );
       }
     }
   }
-  const myPlayer = state.players.find(p => p.id === connId);
   if (myPlayer) {
     for (let hp = 0; hp < myPlayer.hp; hp++) {
       ctx.drawImage(
@@ -72,8 +88,8 @@ export function renderScene(
     drawImage(
       ctx,
       images.players[player.type],
-      player.x * tileSize,
-      player.y * tileSize,
+      offsetX + player.x * tileSize,
+      offsetY + player.y * tileSize,
       1.0,
       getAngle(player.lastDx ?? 0, player.lastDy ?? 0)
     );
@@ -82,8 +98,8 @@ export function renderScene(
     drawImage(
       ctx,
       images.fireball,
-      bullet.x * tileSize,
-      bullet.y * tileSize,
+      offsetX + bullet.x * tileSize,
+      offsetY + bullet.y * tileSize,
       1.0,
       getAngle(bullet.dx ?? 0, bullet.dy ?? 0)
     );
@@ -93,8 +109,14 @@ export function renderScene(
     const shootCooldown = player.shootCooldown ?? 0;
     if (shootCooldown > 0) {
       ctx.beginPath();
-      ctx.moveTo(player.x * tileSize, player.y * tileSize - 5);
-      ctx.lineTo(player.x * tileSize + shootCooldown, player.y * tileSize - 5);
+      ctx.moveTo(
+        offsetX + player.x * tileSize,
+        offsetY + player.y * tileSize - 5
+      );
+      ctx.lineTo(
+        offsetX + player.x * tileSize + shootCooldown,
+        offsetY + player.y * tileSize - 5
+      );
       ctx.strokeStyle = player.type % 2 === 0 ? '#ff8888' : '#8888ff';
       ctx.lineWidth = 2;
       ctx.stroke();
@@ -109,8 +131,8 @@ export function renderScene(
     const size = tileSize * scale * (explosion.scale ?? 1);
     ctx.drawImage(
       images.explosion,
-      (x + 0.5) * tileSize - size / 2,
-      (y + 0.5) * tileSize - size / 2,
+      offsetX + (x + 0.5) * tileSize - size / 2,
+      offsetY + (y + 0.5) * tileSize - size / 2,
       size,
       size
     );
