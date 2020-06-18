@@ -8,6 +8,8 @@ import useInputHandler from 'client/InputHandler/useInputHandler';
 import './App.css';
 import TouchInputHandler from './InputHandler/TouchInputHandler';
 
+import MetaTags from 'react-meta-tags';
+
 const socket = ioClient();
 
 const send = (message: ClientMessage) =>
@@ -69,6 +71,18 @@ const App: React.FC = () => {
   }, [appRef]);
   return (
     <div ref={appRef} className="App">
+      <MetaTags>
+        <meta
+          name="viewport"
+          content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"
+        />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        ></meta>
+      </MetaTags>
+      ;
       <canvas
         ref={canvas}
         width={2 * canvasSize[0]}
