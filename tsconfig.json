@@ -9,7 +9,6 @@
     "baseUrl": "./src",
     "outDir": "ts-build",
     "allowJs": true,
-    "incremental": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
