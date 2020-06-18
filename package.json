@@ -4,6 +4,7 @@
   "private": true,
   "proxy": "http://localhost:5000/",
   "main": "ts-build/server.js",
+  "homepage": "/ca-game",
   "dependencies": {
     "@types/deep-equal": "^1.0.1",
     "@types/express": "^4.17.6",

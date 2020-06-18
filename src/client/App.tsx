@@ -82,7 +82,7 @@ const App: React.FC = () => {
           content="black-translucent"
         ></meta>
       </MetaTags>
-      ;
+
       <canvas
         ref={canvas}
         width={2 * canvasSize[0]}
