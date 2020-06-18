@@ -6,6 +6,7 @@ import { renderScene } from './render';
 import ioClient from 'socket.io-client';
 import useInputHandler from 'client/InputHandler/useInputHandler';
 import './App.css';
+import TouchInputHandler from './InputHandler/TouchInputHandler';
 
 const socket = ioClient();
 
@@ -74,6 +75,7 @@ const App: React.FC = () => {
         height={2 * canvasSize[1]}
         style={{ width: canvasSize[0], height: canvasSize[1] }}
       />
+      <TouchInputHandler handler={inputHandler} />
     </div>
   );
 };

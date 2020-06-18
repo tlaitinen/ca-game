@@ -1,0 +1,22 @@
+.TouchInputHandler-Movement {
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+}
+
+.TouchInputHandler-Circle {
+  position: fixed;
+  margin-left: -10vh;
+  margin-top: -10vh;
+  width: 20vh;
+  height: 20vh;
+  border-radius: 20vh;
+  border: 1px solid #aaaaaa;
+}
+.TouchInputHandler-Shoot {
+  bottom: 32px;
+  right: 32px;
+}
